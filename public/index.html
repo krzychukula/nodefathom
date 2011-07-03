@@ -38,9 +38,113 @@
 		<h1>Skąd to się wzięło?</h1>
 		<ul>
 			<li>V8 - 2008</li>
-			<li>Node.js - 2010</li>
-			<!-- todo: sprawdzić daty -->
+			<li>Node.js - 2009</li>
 		</ul>
+	</div>
+	<div class="slide">
+		<h1>Node.js</h1>
+		<ul>
+			<li>ServerSide JavaScript</li>
+			<li>Zdarzeniowe, nieblokujące</li>
+			<li>EventMachine, Twisted</li>
+			<li>Nginx?</li>
+			<li>CommonJS modules</li>
+		</ul>
+	</div>
+	<div class="slide">
+		<h1>Idea</h1>
+		<ul>
+			<li>Początkowo to wcale nie miał być JavaScript</li>
+			<li>Nieblokujące I/O</li>
+			<li>Bez wątków</li>
+			<li>Event-loop</li>
+		</ul>
+	</div>
+	<div class="slide">
+		<h1>Instalacja</h1>
+		<pre class="prettyprint">
+			configure
+			make
+			make install
+		</pre>
+	</div>
+	<div class="slide">
+		<h1>I/O powinno być robione inaczej</h1>
+	</div>
+	<div class="slide">
+		<h1>W PHP</h1>
+		<pre class="prettyprint">
+			
+$file = file_get_contents('file');
+
+$result = mysql_query('SELECT * FROM POSTS');
+
+		<pre>
+	</div>
+	<div class="slide">
+		<h1>Blokujące</h1>
+		<ul>
+			<li>Cały wątek/proces czeka na dostęp od I/O</li>
+			<li>I/O jest bardzo wolne</li>
+			<li>Odwołania do bazy danych też są bardzo wolne</li>
+			<li>W porównaniu do dostępu np. do RAM</li>
+		</ul>
+	</div>
+	<div class="slide">
+		<h1>I/O Latency</h1>
+		<a href="http://s3.amazonaws.com/four.livejournal/20091117/jsconf.pdf">Slides 2009</a>
+		<a href="2009/jsconf.pdf">Slajdy</a>
+		<ul>
+			<li>L1: 3 cycles</li>
+			<li>L2: 14 cycles</li>
+			<li>RAM: 250 cycles</li>
+			<li>DISK: 41 000 000 cycles</li>
+			<li>NETWORK: 240 000 000 cycles</li>
+		</ul>		
+	</div>
+	<div class="slide">
+		<h1>Jak odwoływać się do zasobów</h1>
+		<pre class="prettyprint">
+	db.query("select ..", function(res){
+		//zrób coś z rezultatem
+	})
+		</pre>
+	</div>
+	<div class="slide">
+		<h1>Wątki</h1>		
+		<ul>			
+			<li>Java - Współbieżność wątków bardzo utrudnia pisanie</li>
+			<li>PHP - Proces dla requesta</li>
+		</ul>
+		<ul>
+			<li>Wątek ~2MB</li>
+			<li>Proces PHP ~2.7MB</li>
+		<ul>
+	</div>
+	<div class="slide">
+		<h1>Proces</h1>
+		<ul>
+			<li>Node jest procesem</li>
+			<li>Działa zdarzeniowo</li>
+			<li>Event-loop</li>
+		</ul>
+	</div>
+	<div class=slide>
+		<h1>Dlaczego piszemy blokujący kod</h1>
+		<ul>
+			<li>Tego nas uczą
+			<li>Brakuje bibliotek
+			<li>Słaba dokumentacja wywołań systemowych pod wzgledem blokowania
+		</ul>
+	</div>
+	<div class=slide>
+		<h1>JavaScript</h1>
+		<ul>
+			<li>Popularny język funkcyjny</li>
+			<li>Jeden proces (proces strony)</li>
+			<li>I/O jako wywołania DOM
+			<li>Brak bibliotek serwerowych
+			<li>Brak złych nawyków w pisaniu kodu na serwerze
 	</div>
 	<div class="slide">
 		<h1>Hello World</h1>
@@ -59,6 +163,95 @@
 		<iframe src="http://localhost:8081/">
 		</iframe>
 	</div>
+	
+	<div class="slide">
+		<h1>To było fajne... ale co to jest?</h1>
+		<h2>Node.js to narzędzie konsolowe, jak python czy ruby</h2>
+		<ul>
+			<li>require('sys') - importuje moduły</li>
+			<li>Działa jak skrypt w przegladarce</li>
+			<li>Można użyć np. setTimeout...</li>
+		</ul>
+	</div>
+	
+	<div class="slide">
+		<h1>SetTimeout</h1>
+		<pre class="prettyprint">
+			var sys = require("sys");
+			setTimeout(function () {
+				sys.puts("world");
+			}, 2000);
+			sys.puts("hello")
+		</pre>
+	</div>
+	<div class="slide">
+		<h1>Odpalić examples/sys.js</h1>
+		<h2>Jak to działa?</h2>
+		
+		<ul>
+			<li>Node automatycznie się zamyka gdy nie ma co robić
+		</ul>
+	</div>
+	
+	<div class="slide">
+		<pre class="prettyprint">
+puts = require("sys").puts;
+
+setInterval(function () {
+	puts("hello");
+}, 500);
+process.addListener("SIGINT",
+	function () {
+		puts("good bye");
+		process.exit(0)
+});
+		</pre>
+	</div>
+	
+	<div class="slide">
+		<h1>SIGINT - examples/sigint.js</h1>
+		<ul>
+			<li>W nieskończoność wypisuje na ekran
+			<li>Wiadomość przy zamknięciu
+			<li>W tym momencie mógły się np. autoamtycznie restartować
+			<li>process - jedna z kilku zmiennych globalnych (jak winndow)
+		</ul>
+	</div>
+	
+	<div class="slide">
+		<h1>events.EventEmitter</h1>
+		<ul>
+			<li>Zna ktos PUB/SUB?</li>
+			<li>
+				<pre class="prettyprint">
+server.on('connection', function (stream) {
+  console.log('someone connected!');
+});
+				</pre>
+			</li>
+			<li>
+				<pre class="prettyprint">
+emitter.emit('connection', request, response);
+# nazwa , parametr1, parametr2, ...
+				</pre>
+			</li>
+		</ul>
+	</div>
+	
+	<div class="slide">
+		<h1>Na koniec</h1>
+		<ul>
+			<li><a href="https://github.com/joyent/node/wiki">wiki</a></li>
+			<li><a href="https://github.com/joyent/node/wiki/Projects,-Applications,-and-Companies-Using-Node">Kto korzysta z Node.js</a></li>
+			<li><a href="http://search.npmjs.org/">npm</a></li>
+			<li><a href="https://github.com/joyent/node/wiki/modules">Lista modulów</a></li>
+			<li><a href="http://nodejs.org/">strona główna</a></li>
+			<li><a href="http://expressjs.com/">express</a></li>
+			<li><a href="http://socket.io/">socket.io</a></li>
+			<li><a href="https://github.com/abram/node-static">node-static</a></li>
+			<li><a href="http://search.npmjs.org/#/_browse/deps">Najbardziej popularne moduły</a></li>
+	</div>
+	
 	<div class="slide">
 		<h1>If you're interested...</h1>
 		<ul>
@@ -69,6 +262,7 @@
 		</ul>
 	</div>
   </div>
+  
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
   <script src="js/fathom/fathom.js"></script>

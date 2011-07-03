@@ -86,7 +86,6 @@ div.footer {
 pre {
     font-family: monospace;
     font-size: 16pt;
-    height: 600px;
     letter-spacing: -1px;
     line-height: 20pt;
     overflow: auto;
@@ -94,25 +93,7 @@ pre {
     pre:focus {
         outline: 0;
     }
-div.phone {
-    -webkit-box-shadow: 0 0 30px #c0c0c0;
-    -moz-box-shadow: 0 0 30px #c0c0c0;
-    box-shadow: 0 0 30px #c0c0c0;
-    -moz-border-radius: 40px;
-    -webkit-border-radius: 40px;
-    border-radius: 40px;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    background-color: black;
-    height: 650px;
-    left: 50%;
-    margin-left: -190px;
-    margin-top: -325px;
-    position: absolute;
-    top: 50%;
-    width: 380px;
-}
+
 iframe {
     -webkit-box-shadow: 0 0 20px #606060;
     -moz-box-shadow: 0 0 20px #606060;
@@ -136,24 +117,8 @@ h1 {
     margin-top: 10px;
     text-align: center;
 }
-h1#prelogo {
-    left: 50%;
-    margin-left: -368px;
-    overflow: hidden;
-    position: absolute;
-    top: 150px;
-    width: 735px;
-}
-h1#logo {
-    background-image: url(../images/jquery-mobile-logo.png);
-    height: 202px;
-    line-height: 1000px;
-    left: 50%;
-    margin-left: -368px;
-    overflow: hidden;
-    position: absolute;
-    top: 220px;
-    width: 735px;
+h2{
+	font-size: 32pt;
 }
 ul {
     padding: 60px;
