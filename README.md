@@ -18,8 +18,8 @@ eg. examples/hello.js on http://localhost:8081/ for Node.js HelloWorld script
 
 Using:
 ------
-http://markdalgleish.com/projects/fathom/
-+ some code from demo presentation
-http://code.google.com/p/google-code-prettify/
-https://github.com/abram/node-static
+- http://markdalgleish.com/projects/fathom/
+-- some code from demo presentation
+- http://code.google.com/p/google-code-prettify/
+- https://github.com/abram/node-static
 
