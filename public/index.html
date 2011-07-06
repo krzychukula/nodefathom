@@ -53,19 +53,34 @@
 	</div>
 	<div class="slide">
 		<h1>Idea</h1>
+		<h2>Ryan Dahl</h2>
 		<ul>
 			<li>Początkowo to wcale nie miał być JavaScript</li>
 			<li>Nieblokujące I/O</li>
 			<li>Bez wątków</li>
-			<li>Event-loop</li>
+			<li><a href="http://blog.mixu.net/2011/02/01/understanding-the-node-js-event-loop/" target="_blank">Event-loop</a></li>
 		</ul>
 	</div>
 	<div class="slide">
 		<h1>Instalacja</h1>
+		<ul>
+			<li><a href="https://github.com/joyent/node/wiki/Installation" target="_blank">Wiki</a></li>
+			<li>python + libssl-dev (openssl)</li>
+		</ul>
 		<pre class="prettyprint">
-			configure
-			make
-			make install
+git clone --depth 1 git://github.com/joyent/node.git
+cd node
+git checkout origin/v0.4 # optional.  Note that master is unstable.
+
+export JOBS=2 # optional, sets number of parallel commands.
+
+mkdir ~/local
+./configure --prefix=$HOME/local/node
+make
+make install
+
+echo 'export PATH=$HOME/local/node/bin:$PATH' >> ~/.profile
+source ~/.profile
 		</pre>
 	</div>
 	<div class="slide">
@@ -149,12 +164,17 @@ $result = mysql_query('SELECT * FROM POSTS');
 	<div class="slide">
 		<h1>Hello World</h1>
 		<pre class="prettyprint">
-			var http = require('http');
-			http.createServer(function (req, res) {
+var http = require('http');
+
+http.createServer(function (req, res) {
+			
 			  res.writeHead(200, {'Content-Type': 'text/plain'});
+			  
 			  res.end('Hello World\n');
-			}).listen(1337, "127.0.0.1");
-			console.log('Server running at http://127.0.0.1:1337/');
+			  
+}).listen(1337, "127.0.0.1");
+
+console.log('Server running at http://127.0.0.1:1337/');
 		</pre>
 	</div>
 	<div class="slide">
@@ -175,13 +195,44 @@ $result = mysql_query('SELECT * FROM POSTS');
 	</div>
 	
 	<div class="slide">
+		<h1>HTTP 1.1</h1>
+		<pre class="prettyprint">
+curl -i http://localhost:8081/
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Connection: keep-alive
+Transfer-Encoding: chunked
+
+Hello World
+
+		</pre>
+	</div>
+	
+	<div class="slide">
+		<h1>apache benchmark</h1>
+		<pre class="prettyprint">
+			ab -n 100000 -c 1000 http://localhost:8081/
+			 
+			Time taken for tests:   17.463 seconds
+			Requests per second:    5726.30 [#/sec] (mean)
+			Time per request:       174.633 [ms] (mean)
+
+		</pre>
+	</div>
+	
+	<div class="slide">
 		<h1>SetTimeout</h1>
 		<pre class="prettyprint">
-			var sys = require("sys");
-			setTimeout(function () {
-				sys.puts("world");
-			}, 2000);
-			sys.puts("hello")
+var sys = require("sys");
+
+setTimeout(function () {
+
+						sys.puts("world");
+						
+}, 2000);
+
+sys.puts("hello")
 		</pre>
 	</div>
 	<div class="slide">
@@ -194,18 +245,23 @@ $result = mysql_query('SELECT * FROM POSTS');
 	</div>
 	
 	<div class="slide">
-		<pre class="prettyprint">
+		<h1>SIGINT</h1>
+<pre class="prettyprint">
 puts = require("sys").puts;
 
 setInterval(function () {
+
 	puts("hello");
+	
 }, 500);
-process.addListener("SIGINT",
-	function () {
-		puts("good bye");
-		process.exit(0)
+
+process.addListener("SIGINT", function () {
+	
+	puts("good bye");
+	process.exit(0)
+					
 });
-		</pre>
+</pre>
 	</div>
 	
 	<div class="slide">
@@ -213,8 +269,8 @@ process.addListener("SIGINT",
 		<ul>
 			<li>W nieskończoność wypisuje na ekran
 			<li>Wiadomość przy zamknięciu
-			<li>W tym momencie mógły się np. autoamtycznie restartować
-			<li>process - jedna z kilku zmiennych globalnych (jak winndow)
+			<li>W tym momencie mógły się np. automtycznie restartować
+			<li>process - jedna z kilku zmiennych globalnych (jak window)
 		</ul>
 	</div>
 	
@@ -241,15 +297,15 @@ emitter.emit('connection', request, response);
 	<div class="slide">
 		<h1>Na koniec</h1>
 		<ul>
-			<li><a href="https://github.com/joyent/node/wiki">wiki</a></li>
-			<li><a href="https://github.com/joyent/node/wiki/Projects,-Applications,-and-Companies-Using-Node">Kto korzysta z Node.js</a></li>
-			<li><a href="http://search.npmjs.org/">npm</a></li>
-			<li><a href="https://github.com/joyent/node/wiki/modules">Lista modulów</a></li>
-			<li><a href="http://nodejs.org/">strona główna</a></li>
-			<li><a href="http://expressjs.com/">express</a></li>
-			<li><a href="http://socket.io/">socket.io</a></li>
-			<li><a href="https://github.com/abram/node-static">node-static</a></li>
-			<li><a href="http://search.npmjs.org/#/_browse/deps">Najbardziej popularne moduły</a></li>
+			<li><a target="_blnk" href="https://github.com/joyent/node/wiki">wiki</a></li>
+			<li><a target="_blank" href="https://github.com/joyent/node/wiki/Projects,-Applications,-and-Companies-Using-Node">Kto korzysta z Node.js</a></li>
+			<li><a target="_blank" href="http://search.npmjs.org/">npm</a></li>
+			<li><a target="_blank" href="https://github.com/joyent/node/wiki/modules">Lista modulów</a></li>
+			<li><a target="_blank" href="http://nodejs.org/">strona główna</a></li>
+			<li><a target="_blank" href="http://expressjs.com/">express</a></li>
+			<li><a target="_blank" href="http://socket.io/">socket.io</a></li>
+			<li><a target="_blank" href="https://github.com/abram/node-static">node-static</a></li>
+			<li><a target="_blank" href="http://search.npmjs.org/#/_browse/deps">Najbardziej popularne moduły</a></li>
 	</div>
 	
 	<div class="slide">
